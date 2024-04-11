@@ -11,7 +11,7 @@ const WithSidebarCrossLinks: FC<WithCrossLinksProps> = ({ navKey }) => {
   const { pathname } = useClientContext();
 
   const [[, sidebarNavigation]] = getSideNavigation([navKey]);
-  console.log(sidebarNavigation);
+  console.log('sidebarNavigation', sidebarNavigation);
   if (!sidebarNavigation || !sidebarNavigation.items) {
     return null; // Return null if sidebar navigation or its items are not available
   }

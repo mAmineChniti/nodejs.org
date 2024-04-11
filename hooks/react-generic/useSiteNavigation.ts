@@ -46,25 +46,11 @@ const useSiteNavigation = () => {
         string,
         MappedNavigationEntry,
       ] => {
-        // Log the values before modification
-        console.log('Before mapping - label:', label);
-        console.log('Before mapping - link:', link);
-        console.log('Before mapping - target:', target);
-        console.log('Before mapping - items:', items);
-        console.log('Before mapping - context:', context);
-        console.log('Before mapping - key:', key);
         const mappedLabel = label ? getFormattedMessage(label, key) : '';
         const mappedLink = link
           ? replaceLinkWithContext(link, context[key])
           : '';
         const mappedItems = items ? mapNavigationEntries(items, context) : [];
-
-        // Log the values after modification
-        console.log('After mapping - label:', mappedLabel);
-        console.log('After mapping - link:', mappedLink);
-        console.log('After mapping - target:', target);
-        console.log('After mapping - items:', mappedItems);
-
         return [
           key,
           {
