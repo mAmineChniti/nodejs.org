@@ -1,7 +1,7 @@
 'use strict';
 
 import { createReadStream } from 'node:fs';
-import { basename, extname, join } from 'node:path';
+import { basename, extname, join, dirname } from 'node:path';
 import readline from 'node:readline';
 
 import graymatter from 'gray-matter';
@@ -31,11 +31,7 @@ const getFrontMatter = (filename, source) => {
     date = new Date(),
     category = 'uncategorized',
   } = graymatter(source).data;
-  const filenameCategory = filename.split('/')[1];
-  console.log('filenameCategory:', filenameCategory);
-  if (filenameCategory !== category) {
-    return null;
-  }
+
   // We also use publishing years as categories for the blog
   const publishYear = new Date(date).getUTCFullYear();
 
@@ -103,12 +99,10 @@ const generateBlogData = async () => {
       // This allows us to only read the frontmatter part of each file
       // and optimise the read-process as we have thousands of markdown files
       _readLine.on('close', () => {
-        const fronMatter = getFrontMatter(
-          filename,
-          rawFrontmatter[filename][1]
-        );
-        if (fronMatter !== null) {
-          posts.push(fronMatter);
+        const post = getFrontMatter(filename, rawFrontmatter[filename][1]);
+        const filePathCategory = dirname(filename).split('/').pop();
+        if (post.categories[0] === filePathCategory) {
+          posts.push(post);
         }
         if (posts.length === filenames.length) {
           resolve({ categories: [...blogCategories], posts });
