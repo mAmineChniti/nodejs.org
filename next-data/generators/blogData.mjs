@@ -1,7 +1,7 @@
 'use strict';
 
 import { createReadStream } from 'node:fs';
-import { basename, extname, join } from 'node:path';
+import { basename, extname, join, dirname } from 'node:path';
 import readline from 'node:readline';
 
 import graymatter from 'gray-matter';
@@ -99,8 +99,11 @@ const generateBlogData = async () => {
       // This allows us to only read the frontmatter part of each file
       // and optimise the read-process as we have thousands of markdown files
       _readLine.on('close', () => {
-        posts.push(getFrontMatter(filename, rawFrontmatter[filename][1]));
-
+        const post = getFrontMatter(filename, rawFrontmatter[filename][1]);
+        const fileCategory = dirname(filename).split('/').pop();
+        if (fileCategory === post.categories[0]) {
+          posts.push(post);
+        }
         if (posts.length === filenames.length) {
           resolve({ categories: [...blogCategories], posts });
         }
