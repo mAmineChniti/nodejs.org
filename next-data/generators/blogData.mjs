@@ -31,7 +31,11 @@ const getFrontMatter = (filename, source) => {
     date = new Date(),
     category = 'uncategorized',
   } = graymatter(source).data;
-
+  const filenameCategory = filename.split('/')[1];
+  console.log('filenameCategory:', filenameCategory);
+  if (filenameCategory !== category) {
+    return null;
+  }
   // We also use publishing years as categories for the blog
   const publishYear = new Date(date).getUTCFullYear();
 
@@ -99,8 +103,13 @@ const generateBlogData = async () => {
       // This allows us to only read the frontmatter part of each file
       // and optimise the read-process as we have thousands of markdown files
       _readLine.on('close', () => {
-        posts.push(getFrontMatter(filename, rawFrontmatter[filename][1]));
-
+        const fronMatter = getFrontMatter(
+          filename,
+          rawFrontmatter[filename][1]
+        );
+        if (fronMatter !== null) {
+          posts.push(fronMatter);
+        }
         if (posts.length === filenames.length) {
           resolve({ categories: [...blogCategories], posts });
         }
